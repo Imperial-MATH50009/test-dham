@@ -1,11 +1,38 @@
-    name: GitHub Classroom Workflow
-
-    on: [push]
-
-    jobs:
-      build:
-        name: Autograding
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v4
-          - uses: education/autograding@v1
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: test
+      id: test
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test
+        setup-command: ''
+        command: python -m pytests tests/
+        timeout: 10
+    - name: another test
+      id: another-test
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: another test
+        setup-command: 'true'
+        command: 'false'
+        timeout: 10
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST_RESULTS: "${{steps.test.outputs.result}}"
+        ANOTHER-TEST_RESULTS: "${{steps.another-test.outputs.result}}"
+      with:
+        runners: test,another-test
