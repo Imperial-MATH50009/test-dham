@@ -19,7 +19,8 @@ jobs:
         test-name: test
         setup-command: python -m pip install pytest
         command: python -m pytest tests/
-        timeout: 10
+        timeout: 1
+        max-score: 5
     - name: another test
       id: another-test
       uses: classroom-resources/autograding-command-grader@v1
@@ -28,6 +29,7 @@ jobs:
         setup-command: 'true'
         command: 'true'
         timeout: 10
+        max-score: 5
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
