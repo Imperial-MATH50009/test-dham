@@ -17,7 +17,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: test
-        setup-command: ''
+        setup-command: python -m pip install pytest
         command: python -m pytest tests/
         timeout: 10
     - name: another test
